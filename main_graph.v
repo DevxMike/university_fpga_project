@@ -117,8 +117,13 @@ always @(posedge t_out) begin
 				state = 0;
 			end
 		end
-		
 	endcase
+	
+	if(tim) begin
+		tim = tim - 1;
+	end
+	
+	sim_state = state;
 end
 
 endmodule
