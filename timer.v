@@ -21,15 +21,9 @@
 module timer(input clk, input [31:0] prescaler, input [31:0] period, output reg out);
 //f_out = f_osc/[(prescaler + 1)(period + 1)]
 //note that prescaler == 0 is forbidden
-reg [31:0] current_presc_value;
-reg [31:0] current_period_value;
-reg internal_clk;
-
-initial begin
-	current_presc_value = 0;
-	current_period_value = 0;
-	internal_clk = 0;
-end 
+reg [31:0] current_presc_value = 0;
+reg [31:0] current_period_value = 0;
+reg internal_clk = 0;
 
 always @(posedge clk)begin
 	if(current_presc_value == prescaler)begin

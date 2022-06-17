@@ -3,7 +3,7 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date:    01:17:19 06/02/2022 
+// Create Date:    01:53:55 06/15/2022 
 // Design Name: 
 // Module Name:    hardware_timer_test 
 // Project Name: 
@@ -18,39 +18,22 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module hardware_timer_test(input Clk, output reg LD0, output reg [7:0] SevenSegment, output reg[2:0] Enable);
-wire timer_out1, timer_out2;
-wire [7:0] driver_segment_vals;
-reg [1:0] segment;
-reg [3:0] time_elapsed;
+module hardware_timer_test(
+	input Clk, 
+	output reg LD0
+);
 
-reg[4:0] bin_value;
+wire t_out;
 
-timer t1(Clk, 12000-1, 1000-1, timer_out1);
-timer t2(Clk, 12000, 5-1, timer_out2);
-led_decoder decoder(bin_value, driver_segment_vals);
+timer blink_timer(
+	.clk(Clk), 
+	.prescaler(12000-1), 
+	.period(1000-1), 
+	.out(t_out)
+);
 
-initial begin
-	LD0 = 0;
-	time_elapsed = 0;
-	segment = 0;
-end
-
-always @(posedge timer_out1)begin
+always @(posedge t_out) begin
 	LD0 <= ~LD0;
-	time_elapsed <= time_elapsed + 1;
-end
-
-always @ (posedge timer_out2) begin
-	case(segment)
-		0: begin Enable <= 3'b110; segment <= segment + 1; bin_value <= time_elapsed; end
-		1: begin Enable <= 3'b101; segment <= segment + 1; bin_value <= 15; end
-		2: begin Enable <= 3'b011; segment <= 0; bin_value <= 14; end
-	endcase 
-end
-
-always @(driver_segment_vals)begin
-	SevenSegment <= ~driver_segment_vals;
 end
 
 endmodule
