@@ -166,28 +166,28 @@ always @(posedge t_out) begin
 			end
 		end
 		
-		6:begin
-			LED = 4'b1011;
-			if(oSWITCH[3]) begin
-				state = 7;
+			6:begin
+				LED = 4'b1011;
+				if(oSWITCH[3]) begin
+					state = 7;
+				end
 			end
+			
+			7:begin
+				LED = 4'b0000;
+				if(oSWITCH[0] == 0) begin
+					state = 0;
+				end
+			end
+		endcase
+		
+		if(tim) begin
+			tim = tim - 1;
 		end
 		
-		7:begin
-			LED = 4'b0000;
-			if(oSWITCH[0] == 0) begin
-				state = 0;
-			end
-		end
-	endcase
-	
-	if(tim) begin
-		tim = tim - 1;
+		millis = millis + 1;
+		
+		sim_state = state;
 	end
-	
-	millis = millis + 1;
-	
-	sim_state = state;
-end
 
-endmodule
+	endmodule
